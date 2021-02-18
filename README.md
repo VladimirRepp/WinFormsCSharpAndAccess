@@ -3,7 +3,6 @@
 © FirePlanetStudio
 
 IDE: Microsoft Visual Studio 2019
-Project Type: archive file (.rar)
 Language: C#
 Database: Access
 Version: 0.1
