@@ -30,34 +30,44 @@ namespace ExampleCS
 
         private void button_download_Click(object sender, EventArgs e)
         {
-            //Создаем соеденение
+            // Создаем соеденение
             string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";//строка соеденения
             OleDbConnection dbConnection = new OleDbConnection(connectionString);//создаем соеденение
+            OleDbDataReader dbReader;
+            
+            try{
+                // Выполянем запрос к БД
+                dbConnection.Open();                                            // открываем соеденение
+                string query = "SELECT * FROM table_name";                      // строка запроса
+                OleDbCommand dbCommand = new OleDbCommand(query, dbConnection); // команда
+                dbReader = dbCommand.ExecuteReader();                           // считываем данные
 
-            //Выполянем запрос к БД
-            dbConnection.Open();//открываем соеденение
-            string query = "SELECT * FROM table_name";//строка запроса
-            OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
-            OleDbDataReader dbReader = dbCommand.ExecuteReader();//считываем данные
-
-            //Проверяем данные
-            if (dbReader.HasRows == false)
-            {
-                MessageBox.Show("Данные не найдены!","Ошибка!");
-            }
-            else
-            {
-                //Запишем данные в таблицу формы
-                while (dbReader.Read())
+                // Проверяем данные
+                if (dbReader.HasRows == false)
                 {
-                    //Выводим данные
-                    //dataGridView1.Rows.Add(dbReader["id"], dbReader["Name"], dbReader["Cost"], dbReader["Quantity"]);
+                    MessageBox.Show("Данные не найдены!","Ошибка!");
+                }
+                else
+                {
+                    // Чтение данных
+                    while (dbReader.Read())
+                    {
+                        // Выводим данные
+                        dataGridView1.Rows.Add(dbReader["id"], dbReader["Name"], dbReader["Cost"], dbReader["Quantity"]);
+                    }
                 }
             }
-
-            //Закрываем соеденение с БД
-            dbReader.Close();
-            dbConnection.Close();
+            catch(Exception ex)
+            {
+                //throw ex;
+                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+            }
+            finally
+            {
+                // Закрываем соеденение с БД
+                dbReader.Close();
+                dbConnection.Close();
+            }                    
         }
 
         private void button_add_Click(object sender, EventArgs e)
@@ -82,44 +92,53 @@ namespace ExampleCS
                 return;
             }
 
-            //Считаем данные
+            // Считаем данные
             string id = dataGridView1.Rows[index].Cells[0].Value.ToString();
             string name = dataGridView1.Rows[index].Cells[1].Value.ToString();
             string cost = dataGridView1.Rows[index].Cells[2].Value.ToString();
             string quantity = dataGridView1.Rows[index].Cells[3].Value.ToString();
 
-            //Создаем соеденение
-            string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";//строка соеденения
-            OleDbConnection dbConnection = new OleDbConnection(connectionString);//создаем соеденение
+            // Создаем соеденение
+            string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";  // строка соеденения
+            OleDbConnection dbConnection = new OleDbConnection(connectionString);                   // создаем соеденение
 
-            //Выполянем запрос к БД
-            dbConnection.Open();//открываем соеденение
-            string query = "INSERT INTO table_name VALUES (" + id + ", '" + name + "', " + cost + ", " + quantity + ")";//строка запроса
-            OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
+            try{
+                 // Выполянем запрос к БД
+                dbConnection.Open();//открываем соеденение
+                string query = "INSERT INTO table_name VALUES (" + id + ", '" + name + "', " + cost + ", " + quantity + ")";//строка запроса
+                OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
 
-            //Выполняем запрос
-            if (dbCommand.ExecuteNonQuery() != 1)
-                MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
-            else
-                MessageBox.Show("Данные добавлены!","Внимание!");
-
-            //Закрываем соеденение с БД
-            dbConnection.Close();
+                // Выполняем запрос
+                if (dbCommand.ExecuteNonQuery() != 1)
+                    MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
+                else
+                    MessageBox.Show("Данные добавлены!","Внимание!");
+            }
+            catch(Exception ex)
+            {
+                //throw ex;
+                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+            }
+            finally
+            {
+                // Закрываем соеденение с БД
+                dbConnection.Close();
+            }    
         }
 
         private void button_update_Click(object sender, EventArgs e)
         {
-            //Проверим количество выбранных строк
+            // Проверим количество выбранных строк
             if (dataGridView1.SelectedRows.Count != 1)
             {
                 MessageBox.Show("Выберите одну строку!", "Внимание!");
                 return;
             }
 
-            //Запомним выбранную строку
+            // Запомним выбранную строку
             int index = dataGridView1.SelectedRows[0].Index;
 
-            //Проверим данные в таблицы
+            // Проверим данные в таблицы
             if (dataGridView1.Rows[index].Cells[0].Value == null ||
                 dataGridView1.Rows[index].Cells[1].Value == null ||
                 dataGridView1.Rows[index].Cells[2].Value == null ||
@@ -129,31 +148,40 @@ namespace ExampleCS
                 return;
             }
 
-            //Считаем данные
+            // Считаем данные
             string id = dataGridView1.Rows[index].Cells[0].Value.ToString();
             string name = dataGridView1.Rows[index].Cells[1].Value.ToString();
             string cost = dataGridView1.Rows[index].Cells[2].Value.ToString();
             string quantity = dataGridView1.Rows[index].Cells[3].Value.ToString();
 
-            //Создаем соеденение
+            // Создаем соеденение
             string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";//строка соеденения
             OleDbConnection dbConnection = new OleDbConnection(connectionString);//создаем соеденение
+    
+            try{
+                 // Выполянем запрос к БД
+                dbConnection.Open();//открываем соеденение
+                string query = "UPDATE table_name SET Name = '" + name + "',Cost=" + cost + ",Quantity=" + quantity + " WHERE id = " + id;//строка запроса
+                OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
 
-            //Выполянем запрос к БД
-            dbConnection.Open();//открываем соеденение
-            string query = "UPDATE table_name SET Name = '" + name + "',Cost=" + cost + ",Quantity=" + quantity + " WHERE id = " + id;//строка запроса
-            OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
-
-            //Выполняем запрос
-            if (dbCommand.ExecuteNonQuery() != 1)
-                MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
-            else
-            {
-                MessageBox.Show("Данные изменены!", "Внимание!");
+                //Выполняем запрос
+                if (dbCommand.ExecuteNonQuery() != 1)
+                    MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
+                else
+                {
+                    MessageBox.Show("Данные изменены!", "Внимание!");
+                }
             }
-
-            //Закрываем соеденение с БД
-            dbConnection.Close();
+            catch(Exception ex)
+            {
+                //throw ex;
+                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+            }
+            finally
+            {
+                // Закрываем соеденение с БД
+                dbConnection.Close();
+            }  
         }
 
         private void button_delete_Click(object sender, EventArgs e)
@@ -168,37 +196,46 @@ namespace ExampleCS
             //Запомним выбранную строку
             int index = dataGridView1.SelectedRows[0].Index;
 
-            //Проверим данные в таблицы
+            // Проверим данные в таблицы
             if (dataGridView1.Rows[index].Cells[0].Value == null)
             {
                 MessageBox.Show("Не все данные введены!", "Внимание!");
                 return;
             }
 
-            //Считаем данные
+            // Считаем данные
             string id = dataGridView1.Rows[index].Cells[0].Value.ToString();
 
-            //Создаем соеденение
-            string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";//строка соеденения
-            OleDbConnection dbConnection = new OleDbConnection(connectionString);//создаем соеденение
+            // Создаем соеденение
+            string connectionString = "provider=Microsoft.Jet.OLEDB.4.0;Data Source=Database.mdb";  // строка соеденения
+            OleDbConnection dbConnection = new OleDbConnection(connectionString);                   // создаем соеденение
 
-            //Выполянем запрос к БД
-            dbConnection.Open();//открываем соеденение
-            string query = "DELETE FROM table_name WHERE id = " + id;//строка запроса
-            OleDbCommand dbCommand = new OleDbCommand(query, dbConnection);//команда
+            try{
+                // Выполянем запрос к БД
+                dbConnection.Open();                                            // открываем соеденение
+                string query = "DELETE FROM table_name WHERE id = " + id;       // строка запроса
+                OleDbCommand dbCommand = new OleDbCommand(query, dbConnection); // команда
 
-            //Выполняем запрос
-            if (dbCommand.ExecuteNonQuery() != 1)
-                MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
-            else
-            {
-                MessageBox.Show("Данные удалены!", "Внимание!");
-                //Удаляем данные из таблицы в форме
-                dataGridView1.Rows.RemoveAt(index);
+                // Выполняем запрос
+                if (dbCommand.ExecuteNonQuery() != 1)
+                    MessageBox.Show("Ошибка выполнения запроса!", "Ошибка!");
+                else
+                {
+                    MessageBox.Show("Данные удалены!", "Внимание!");
+                    // Удаляем данные из таблицы в форме
+                    dataGridView1.Rows.RemoveAt(index);
+                }
             }
-
-            //Закрываем соеденение с БД
-            dbConnection.Close();
+            catch(Exception ex)
+            {
+                //throw ex;
+                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+            }
+            finally
+            {
+                // Закрываем соеденение с БД
+                dbConnection.Close();
+            }  
         }
     }
 }
