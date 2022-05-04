@@ -60,7 +60,7 @@ namespace ExampleCS
             catch(Exception ex)
             {
                 //throw ex;
-                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+                MessageBox($"Сообщение: {ex.Message}","Вызвано исключение!");
             }
             finally
             {
@@ -117,7 +117,7 @@ namespace ExampleCS
             catch(Exception ex)
             {
                 //throw ex;
-                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+                MessageBox($"Сообщение: {ex.Message}","Вызвано исключение!");
             }
             finally
             {
@@ -175,7 +175,7 @@ namespace ExampleCS
             catch(Exception ex)
             {
                 //throw ex;
-                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+                MessageBox($"Сообщение: {ex.Message}","Вызвано исключение!");
             }
             finally
             {
@@ -229,7 +229,7 @@ namespace ExampleCS
             catch(Exception ex)
             {
                 //throw ex;
-                MessageBox("Сообщение: {ex.Message}","Вызвано исключение!");
+                MessageBox($"Сообщение: {ex.Message}","Вызвано исключение!");
             }
             finally
             {
